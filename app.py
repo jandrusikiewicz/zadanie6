@@ -21,13 +21,14 @@ def update_figure(prediction_type, feature_name):
         fig = px.scatter(x=df[feature_name],
                          y=df["pH"],)
         fig.update_yaxes(title="pH",)
+        fig.update_xaxes(title=feature_name, )
 
     elif prediction_type == "Classification":
-        fig = px.scatter(x=df[feature_name],
-                         y=df["target"],)
-        fig.update_yaxes(title="target",)
+        fig = px.histogram(y=df[feature_name],
+                     x=df["target"],)
+        fig.update_xaxes(title="target",)
+        fig.update_yaxes(title=feature_name, )
 
-    fig.update_xaxes(title=feature_name,)
     fig.update_layout(margin={'l': 40, 'b': 40, 't': 10, 'r': 0}, hovermode='closest')
     return fig
 
@@ -36,8 +37,11 @@ style = {'textAlign': 'center', 'marginTop': 40, 'marginBottom': 40}
 app.layout = html.Div(id='parent', children=[
     html.H1(id='H1', children='Praca Domowa 06 – Dash', style=style),
 
+    html.H2(id='H2-table', children='10 wierszy z ramki danych', style=style),
     dbc.Table.from_dataframe(df.head(10), striped=True, bordered=True, hover=True, id='table', style=style),
+    html.H2(id='H2-prediction', children='Wybierz rodzaj predykcji', style=style),
     dcc.Dropdown(['Classification', 'Regression'], "Classification", id='dropdown', style=style),
+    html.H2(id='H2-feature', children='Wybierz zmienną', style=style),
     dcc.Dropdown(
                 df.columns.tolist(),
                 'fixed acidity',
@@ -49,5 +53,5 @@ app.layout = html.Div(id='parent', children=[
 ])
 
 if __name__ == '__main__':
-    app.run_server()
+    app.run_server(debug=True)
 
